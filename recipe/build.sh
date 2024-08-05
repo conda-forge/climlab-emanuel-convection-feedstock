@@ -5,4 +5,4 @@ ${PYTHON} $(which meson) setup ${MESON_ARGS} \
     builddir || (cat builddir/meson-logs/meson-log.txt && exit 1)
 
 ${PYTHON} -m build --wheel --no-isolation --skip-dependency-check -Cbuilddir=builddir
-${PYTHON} -m pip install dist/climlab_sbm_convection*.whl
+${PYTHON} -m pip install dist/climlab_emanuel_convection*.whl
