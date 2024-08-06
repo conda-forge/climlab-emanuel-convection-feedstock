@@ -1,36 +1,48 @@
-{% set version = "0.2" %}
+{% set name = "climlab-emanuel-convection" %}
+{% set version = "0.3" %}
 
 package:
-  name: climlab-emanuel-convection
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
   url: https://github.com/climlab/climlab-emanuel-convection/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: db367c2b4f99176a242a1c9e9ef34c3563cff43c01b33a48a57ac7ce1d36e8f3
+  sha256: d8040238a9fdd98b3d8571af4ac69458654724f5ee3309df212f6a3c983e5010
 
 build:
-  script: {{ PYTHON }} -m pip install . -vv
-  skip: true  # [py<37]
-  number: 3
+  skip: true  # [py<311 or win]  
+  number: 0
 
 requirements:
   build:
     - python                                 # [build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - numpy                                  # [build_platform != target_platform]
-    - {{ compiler('fortran') }}
-    - {{ compiler('m2w64_fortran') }}  # [win]
+    - ninja                                  
+    - pkg-config                             # [unix]
+    - clang                                  # [win]
+    # use flang as fortran compiler on windows (uses clang driver)
+    - flang <18                              # [win]
+    # use llvm linker for both of the above
+    - lld                                    # [win]
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
+    - {{ compiler('fortran') }}              # [unix]
   host:
-    - libpython  # [win]
+    - compiler-rt                            # [win]
+    - meson-python
+    # limit this for now because incompatible changes
+    # have accumulated in meson_dev channel for 1.4+
+    - meson <1.4                             # [win]
     - python
-    - setuptools
-    - pip
+    - python-build
     - numpy
+    - pip
+    - packaging >=20.0
   run:
     - python
-    - {{ pin_compatible('numpy') }}
-
+    - numpy
+    
 test:
   requires:
     - pytest
