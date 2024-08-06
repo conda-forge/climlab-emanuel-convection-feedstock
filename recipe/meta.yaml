@@ -10,7 +10,7 @@ source:
   sha256: d8040238a9fdd98b3d8571af4ac69458654724f5ee3309df212f6a3c983e5010
 
 build:
-  skip: true  # [py<311 or win]  
+  skip: true  # [py<311 or win]
   number: 0
 
 requirements:
@@ -18,7 +18,7 @@ requirements:
     - python                                 # [build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - numpy                                  # [build_platform != target_platform]
-    - ninja                                  
+    - ninja
     - pkg-config                             # [unix]
     - clang                                  # [win]
     # use flang as fortran compiler on windows (uses clang driver)
@@ -26,6 +26,7 @@ requirements:
     # use llvm linker for both of the above
     - lld                                    # [win]
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - {{ stdlib("c") }}
     - {{ compiler('fortran') }}              # [unix]
   host:
@@ -42,7 +43,7 @@ requirements:
   run:
     - python
     - numpy
-    
+
 test:
   requires:
     - pytest
