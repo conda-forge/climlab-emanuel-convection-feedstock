@@ -10,8 +10,8 @@ source:
   sha256: 2b03d5e5f8b9e56aebb7891b97610149f1ff9aa32ba7d844a639c3bc76d0f03f
 
 build:
-  skip: true  # [py<39 or win or python_impl == 'pypy']
-  number: 0
+  skip: true  # [py<39]
+  number: 1
 
 requirements:
   build:
@@ -19,21 +19,12 @@ requirements:
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - numpy                                  # [build_platform != target_platform]
     - ninja
-    - pkg-config                             # [unix]
-    - clang                                  # [win]
-    # use flang as fortran compiler on windows (uses clang driver)
-    - flang <18                              # [win]
-    # use llvm linker for both of the above
-    - lld                                    # [win]
+    - pkg-config
     - {{ compiler('c') }}
     - {{ stdlib("c") }}
-    - {{ compiler('fortran') }}              # [unix]
+    - {{ compiler('fortran') }}
   host:
-    - compiler-rt                            # [win]
     - meson-python
-    # limit this for now because incompatible changes
-    # have accumulated in meson_dev channel for 1.4+
-    - meson <1.4                             # [win]
     - python
     - python-build
     - numpy
